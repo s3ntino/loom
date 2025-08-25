@@ -4,11 +4,11 @@ import static com.datastax.oss.driver.api.core.type.DataTypes.TEXT;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
 import static dev.vanqure.loom.RepositoryIdentity.identityOf;
 
+import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import dev.vanqure.loom.BaseLoomRepository;
 import dev.vanqure.loom.OperationNotAppliedException;
 import dev.vanqure.loom.RowTransformer;
-import dev.vanqure.loom.SessionProvider;
 
 final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserRepository {
 
@@ -17,8 +17,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     private final SimpleStatement updateUserQuery;
     private final SimpleStatement deleteUserQuery;
 
-    UserRepositoryImpl(final SessionProvider sessionProvider) {
-        super(identityOf("survival-games", "users"), sessionProvider, rowTransformer());
+    UserRepositoryImpl() {
+        super(identityOf("survival-games", "users"), () -> CqlSession.builder().build(), rowTransformer());
         this.insertUserQuery = insertQuery()
                 .value("id", bindMarker())
                 .value("password", bindMarker())
