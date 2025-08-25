@@ -2,6 +2,7 @@ package dev.vanqure.loom.tests;
 
 import static com.datastax.oss.driver.api.core.type.DataTypes.TEXT;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
+import static com.datastax.oss.driver.api.querybuilder.SchemaBuilder.createKeyspace;
 import static dev.vanqure.loom.RepositoryIdentity.identityOf;
 
 import com.datastax.oss.driver.api.core.CqlSession;
@@ -19,6 +20,7 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     UserRepositoryImpl() {
         super(identityOf("survival-games", "users"),
                 () -> CqlSession.builder().build(),
+                keyspace -> createKeyspace(keyspace).ifNotExists().withSimpleStrategy(2),
                 row -> new User(
                         row.get("id", String.class),
                         row.get("password", String.class)));

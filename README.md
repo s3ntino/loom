@@ -2,6 +2,17 @@
 
 A lightweight Scylla DSL, crafted for expressive queries without boilerplate.
 
+### Why Loom?
+
+Loom is a lightweight, ultra-flexible Scylla DSL built for **modern Java developers** who hate boilerplate.
+
+- **No Boilerplate:** Define repositories once; CRUD, queries, and table handling are automatic.
+- **Full Flexibility:** Run any query, mix custom logic — Loom imposes no limitations.
+- **Memory & Performance Conscious:** Queries are constants, lambdas are tiny — negligible overhead, no memory leaks.
+- **Modern Java Friendly:** Uses records, lambdas, and static imports for concise, readable code.
+
+With Loom, you can focus on **building features, not repetitive scaffolding**.
+
 ### Get started
 
 You can build dependency and append it to your local .m2 directory, by using: ./gradlew publishToMavenLocal
@@ -34,6 +45,7 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     UserRepositoryImpl() {
         super(identityOf("survival-games", "users"),
                 () -> CqlSession.builder().build(),
+                keyspace -> createKeyspace(keyspace).ifNotExists().withSimpleStrategy(2),
                 row -> new User(
                         row.get("id", String.class),
                         row.get("password", String.class)));

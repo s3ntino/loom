@@ -8,7 +8,11 @@ import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.delete.DeleteSelection;
 import com.datastax.oss.driver.api.querybuilder.insert.InsertInto;
+import com.datastax.oss.driver.api.querybuilder.schema.AlterKeyspaceStart;
+import com.datastax.oss.driver.api.querybuilder.schema.AlterTableStart;
+import com.datastax.oss.driver.api.querybuilder.schema.CreateKeyspaceStart;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateTableStart;
+import com.datastax.oss.driver.api.querybuilder.schema.Drop;
 import com.datastax.oss.driver.api.querybuilder.select.SelectFrom;
 import com.datastax.oss.driver.api.querybuilder.truncate.Truncate;
 import com.datastax.oss.driver.api.querybuilder.update.UpdateStart;
@@ -23,11 +27,13 @@ public abstract class BaseLoomRepository<V> {
     protected BaseLoomRepository(
             final RepositoryIdentity identity,
             final SessionProvider sessionProvider,
+            final KeyspaceValidator keyspaceValidator,
             final RowTransformer<V> rowTransformer) {
         this.sessionProvider = sessionProvider;
         this.keyspace = CqlIdentifier.fromCql(identity.keyspace());
         this.table = CqlIdentifier.fromCql(identity.table());
         this.rowTransformer = rowTransformer;
+        executeQuery(keyspaceValidator.validateKeyspace(keyspace));
     }
 
     protected void executeQuery(final BuildableQuery buildableQuery) {
@@ -60,6 +66,26 @@ public abstract class BaseLoomRepository<V> {
 
     protected CreateTableStart createTableQuery() {
         return SchemaBuilder.createTable(keyspace, table);
+    }
+
+    protected AlterTableStart alterTableQuery() {
+        return SchemaBuilder.alterTable(keyspace, table);
+    }
+
+    protected Drop dropTableQuery() {
+        return SchemaBuilder.dropTable(keyspace, table);
+    }
+
+    protected CreateKeyspaceStart createKeyspaceQuery() {
+        return SchemaBuilder.createKeyspace(keyspace);
+    }
+
+    protected AlterKeyspaceStart alterKeyspaceQuery() {
+        return SchemaBuilder.alterKeyspace(keyspace);
+    }
+
+    protected Drop dropKeyspaceQuery() {
+        return SchemaBuilder.dropKeyspace(keyspace);
     }
 
     protected InsertInto insertQuery() {
