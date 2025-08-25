@@ -1,13 +1,13 @@
 package dev.vanqure.loom.tests;
 
+import static com.datastax.oss.driver.api.core.type.DataTypes.TEXT;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
+import static dev.vanqure.loom.RepositoryIdentity.identityOf;
 
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.datastax.oss.driver.api.core.type.DataTypes;
 import dev.vanqure.loom.BaseLoomRepository;
 import dev.vanqure.loom.OperationNotAppliedException;
-import dev.vanqure.loom.RepositoryIdentity;
 import dev.vanqure.loom.RowTransformer;
 import dev.vanqure.loom.SessionProvider;
 
@@ -19,7 +19,7 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     private final SimpleStatement deleteUserQuery;
 
     UserRepositoryImpl(final SessionProvider sessionProvider) {
-        super(RepositoryIdentity.identityOf("survival-games", "users"), sessionProvider, rowTransformer());
+        super(identityOf("survival-games", "users"), sessionProvider, rowTransformer());
         this.insertUserQuery = insertQuery()
                 .value("id", bindMarker())
                 .value("password", bindMarker())
@@ -35,8 +35,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
                 selectQuery().all().whereColumn("id").isEqualTo(bindMarker()).build();
         executeQuery(createTableQuery()
                 .ifNotExists()
-                .withPartitionKey("id", DataTypes.TEXT)
-                .withColumn("password", DataTypes.TEXT));
+                .withPartitionKey("id", TEXT)
+                .withColumn("password", TEXT));
     }
 
     private static RowTransformer<User> rowTransformer() {
