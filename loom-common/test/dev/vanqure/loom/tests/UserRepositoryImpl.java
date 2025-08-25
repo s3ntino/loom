@@ -26,18 +26,15 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
                 .build();
         this.updateUserQuery = updateQuery()
                 .setColumn("password", bindMarker())
-                .whereColumn("id").isEqualTo(bindMarker())
-                .build();
-        this.deleteUserQuery = deleteQuery()
                 .whereColumn("id")
                 .isEqualTo(bindMarker())
                 .build();
-        this.findUserByIdQuery = selectQuery()
-                .all()
-                .whereColumn("id")
-                .isEqualTo(bindMarker())
-                .build();
-        executeQuery(createTableQuery().ifNotExists()
+        this.deleteUserQuery =
+                deleteQuery().whereColumn("id").isEqualTo(bindMarker()).build();
+        this.findUserByIdQuery =
+                selectQuery().all().whereColumn("id").isEqualTo(bindMarker()).build();
+        executeQuery(createTableQuery()
+                .ifNotExists()
                 .withPartitionKey("id", DataTypes.TEXT)
                 .withColumn("password", DataTypes.TEXT));
     }
@@ -52,7 +49,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
             final var statement = session.prepare(insertUserQuery).bind(user.id(), user.password());
             final ResultSet resultSet = session.execute(statement);
             if (!resultSet.wasApplied()) {
-                throw new OperationNotAppliedException("Couldn't insert user identified by id %s.".formatted(user.id()));
+                throw new OperationNotAppliedException(
+                        "Couldn't insert user identified by id %s.".formatted(user.id()));
             }
         });
     }
@@ -63,7 +61,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
             final var statement = session.prepare(updateUserQuery).bind(user.password(), user.id());
             final var resultSet = session.execute(statement);
             if (!resultSet.wasApplied()) {
-                throw new OperationNotAppliedException("Couldn't update user identified by id %s.".formatted(user.id()));
+                throw new OperationNotAppliedException(
+                        "Couldn't update user identified by id %s.".formatted(user.id()));
             }
         });
     }
@@ -74,7 +73,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
             final var statement = session.prepare(deleteUserQuery).bind(user.id());
             final var resultSet = session.execute(statement);
             if (!resultSet.wasApplied()) {
-                throw new OperationNotAppliedException("Couldn't delete user identified by id %s.".formatted(user.id()));
+                throw new OperationNotAppliedException(
+                        "Couldn't delete user identified by id %s.".formatted(user.id()));
             }
         });
     }
