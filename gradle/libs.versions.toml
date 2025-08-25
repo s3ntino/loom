@@ -2,11 +2,15 @@
 jupiter = "5.11.3"
 assertj = "3.26.3"
 annotations = "26.0.1"
+scylla-driver = "4.19.0.1"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jupiter" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+scylla-driver-core = { module = "com.scylladb:java-driver-core", version.ref = "scylla-driver" }
+scylla-driver-query-builder = { module = "com.scylladb:java-driver-query-builder", version.ref = "scylla-driver" }
 
 [bundles]
+scylla-driver = ['scylla-driver-core', 'scylla-driver-query-builder']

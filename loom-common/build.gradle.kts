@@ -5,7 +5,9 @@ plugins {
     `loom-unit`
 }
 
-dependencies {}
+dependencies {
+    api(libs.bundles.scylla.driver)
+}
 
 loomPublish {
     artifactId = "loom-common"
