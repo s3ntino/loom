@@ -58,7 +58,7 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     public void insertUser(final User user) {
         executeWithSession(session -> {
             final var statement = session.prepare(insertUserQuery).bind(user.id(), user.password());
-            final ResultSet resultSet = session.execute(statement);
+            final var resultSet = session.execute(statement);
             if (!resultSet.wasApplied()) {
                 throw new OperationNotAppliedException(
                         "Couldn't insert user identified by id %s.".formatted(user.id()));

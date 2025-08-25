@@ -4,7 +4,6 @@ import static com.datastax.oss.driver.api.core.type.DataTypes.TEXT;
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.bindMarker;
 import static dev.vanqure.loom.RepositoryIdentity.identityOf;
 
-import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.SimpleStatement;
 import dev.vanqure.loom.BaseLoomRepository;
 import dev.vanqure.loom.OperationNotAppliedException;
@@ -45,7 +44,7 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
     public void insertUser(final User user) {
         executeWithSession(session -> {
             final var statement = session.prepare(insertUserQuery).bind(user.id(), user.password());
-            final ResultSet resultSet = session.execute(statement);
+            final var resultSet = session.execute(statement);
             if (!resultSet.wasApplied()) {
                 throw new OperationNotAppliedException(
                         "Couldn't insert user identified by id %s.".formatted(user.id()));
