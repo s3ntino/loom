@@ -10,5 +10,5 @@ dependencies {
 }
 
 loomPublish {
-    artifactId = "loom-common"
+    artifactId = "loom"
 }
