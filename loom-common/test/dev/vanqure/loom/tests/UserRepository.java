@@ -1,8 +1,6 @@
 package dev.vanqure.loom.tests;
 
-import dev.vanqure.loom.CrudLoomRepository;
-
-public interface UserRepository extends CrudLoomRepository {
+public interface UserRepository {
 
     void insertUser(User user);
 

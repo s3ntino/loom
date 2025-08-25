@@ -33,10 +33,8 @@ final class UserRepositoryImpl extends BaseLoomRepository<User> implements UserR
                 deleteQuery().whereColumn("id").isEqualTo(bindMarker()).build();
         this.findUserByIdQuery =
                 selectQuery().all().whereColumn("id").isEqualTo(bindMarker()).build();
-        executeQuery(createTableQuery()
-                .ifNotExists()
-                .withPartitionKey("id", TEXT)
-                .withColumn("password", TEXT));
+        executeQuery(
+                createTableQuery().ifNotExists().withPartitionKey("id", TEXT).withColumn("password", TEXT));
     }
 
     private static RowTransformer<User> rowTransformer() {

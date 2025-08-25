@@ -1,8 +1,8 @@
 package dev.vanqure.loom.tests;
 
-public final class UserNotFoundException extends IllegalStateException {
+final class UserNotFoundException extends IllegalArgumentException {
 
-    public UserNotFoundException(final String message) {
+    UserNotFoundException(final String message) {
         super(message);
     }
 }
