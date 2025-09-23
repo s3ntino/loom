@@ -1,6 +1,6 @@
 [versions]
 jupiter = "5.13.4"
-assertj = "3.27.4"
+assertj = "3.27.6"
 annotations = "26.0.2"
 scylla-driver = "4.19.0.1"
 
